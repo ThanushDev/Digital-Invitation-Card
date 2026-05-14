@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          # මෙතන තිබුණු cache: 'npm' පේළිය ඉවත් කළා lock file එක නැති නිසා එන error එක නැති කරන්න
 
       - name: Install dependencies
         run: npm install
@@ -41,6 +41,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # ඔබ Vite පාවිච්චි කරන්නේ නම් output එක බොහෝ විට 'dist' වේ. 
+          # වෙනත් framework එකක් නම් (උදා: Next.js) මෙය වෙනස් විය හැක.
           path: './dist'
 
       - name: Deploy to GitHub Pages
