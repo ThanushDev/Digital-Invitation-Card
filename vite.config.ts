@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react'
 // NOTE: Change 'your-repo-name' to your actual GitHub repository name
 export default defineConfig({
   plugins: [react()],
-  base: '/your-repo-name/',
+  base: '/Digital-Invitation-Card/',
 })
