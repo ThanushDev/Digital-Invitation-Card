@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guest QR Code Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0a1845;
+      color: #fff;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      color: #00d4ff;
+    }
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .setup-box {
+      background: #0d1b4c;
+      border: 1px solid #3b5fc9;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto 28px;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: #00d4ff;
+      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      background: #0a1845;
+      border: 1px solid #3b5fc9;
+      border-radius: 8px;
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      outline: none;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: #00d4ff;
+    }
+    textarea {
+      height: 120px;
+      resize: vertical;
+      font-family: monospace;
+    }
+    button {
+      background: linear-gradient(135deg, #3b5fc9, #00d4ff);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+    }
+    button:hover { opacity: 0.9; }
+
+    /* Print button */
+    .print-btn {
+      background: linear-gradient(135deg, #1a7c3e, #00d4ff);
+      margin-top: 12px;
+    }
+
+    /* QR Grid */
+    #qr-output {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .qr-card {
+      background: white;
+      color: #0a1845;
+      border-radius: 12px;
+      padding: 18px 16px 14px;
+      text-align: center;
+      width: 180px;
+      box-shadow: 0 4px 20px rgba(0,212,255,0.2);
+    }
+    .qr-card .guest-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-top: 10px;
+      color: #0a1845;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+    .qr-card .scan-hint {
+      font-size: 0.6rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    @media print {
+      body { background: white; padding: 10px; }
+      h1, .subtitle, .setup-box, .print-btn { display: none; }
+      #qr-output { gap: 12px; }
+      .qr-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎟️ Guest QR Code Generator</h1>
+<p class="subtitle">Each guest gets their own QR code — scan to open the personalised invitation</p>
+
+<div class="setup-box">
+  <label>Your Invitation Base URL (GitHub Pages URL)</label>
+  <input type="text" id="base-url" placeholder="https://yourusername.github.io/your-repo-name/" value="https://yourusername.github.io/your-repo-name/" />
+
+  <label>Guest Names (one per line)</label>
+  <textarea id="guest-list" placeholder="Kamal Perera
+Nimali Silva
+Sanjaya Fernando
+Priya Rathnayake"></textarea>
+
+  <button onclick="generateQRCodes()">✨ Generate QR Codes</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Print All QR Codes</button>
+</div>
+
+<div id="qr-output"></div>
+
+<script>
+function generateQRCodes() {
+  const baseUrl = document.getElementById('base-url').value.trim().replace(/\/$/, '');
+  const names = document.getElementById('guest-list').value
+    .split('\n')
+    .map(n => n.trim())
+    .filter(n => n.length > 0);
+
+  const output = document.getElementById('qr-output');
+  output.innerHTML = '';
+
+  if (!baseUrl) {
+    alert('Base URL eka denna!');
+    return;
+  }
+  if (names.length === 0) {
+    alert('Guest names denna!');
+    return;
+  }
+
+  names.forEach(name => {
+    const encodedName = encodeURIComponent(name);
+    const url = `${baseUrl}/?guest=${encodedName}`;
+
+    const card = document.createElement('div');
+    card.className = 'qr-card';
+
+    const qrDiv = document.createElement('div');
+    card.appendChild(qrDiv);
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'guest-name';
+    nameEl.textContent = name;
+    card.appendChild(nameEl);
+
+    const hint = document.createElement('div');
+    hint.className = 'scan-hint';
+    hint.textContent = 'Scan for invitation';
+    card.appendChild(hint);
+
+    output.appendChild(card);
+
+    new QRCode(qrDiv, {
+      text: url,
+      width: 148,
+      height: 148,
+      colorDark: '#0a1845',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  });
+}
+</script>
+
+</body>
+</html>

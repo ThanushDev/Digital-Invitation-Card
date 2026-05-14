@@ -1,0 +1,47 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+:root {
+  --navy-dark: #0a1845;
+  --navy-medium: #0d1b4c;
+  --blue-accent: #3b5fc9;
+  --blue-light: #5b7fd9;
+  --cyan-glow: #00d4ff;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--navy-dark);
+  overflow: hidden;
+}
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+.font-display {
+  font-family: 'Poppins', sans-serif;
+}
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+  }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
