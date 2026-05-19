@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, MapPin } from 'lucide-react';
 import { CircuitBackground } from './CircuitBackground';
 import { AnimatedGlobe } from './AnimatedGlobe';
 import { CharacterLeft } from './CharacterLeft';
 import { CharacterRight } from './CharacterRight';
 import { TechHUD } from './TechHUD';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 
 const T = {
   url: 0.1, label: 0.35, title1: 0.6, title2: 0.85,
@@ -60,6 +60,7 @@ function GlitchTitle({ text }: { text: string }) {
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
         {text}
       </motion.span>
+      {/* Cyan shard - top */}
       <motion.span
         aria-hidden
         style={{
@@ -76,6 +77,7 @@ function GlitchTitle({ text }: { text: string }) {
         transition={{ duration: 3.5, repeat: Infinity, times: [0,0.88,0.89,0.90,0.91,0.93,0.94,0.95,0.96,0.97,0.98,1] }}>
         {text}
       </motion.span>
+      {/* Red shard - bottom */}
       <motion.span
         aria-hidden
         style={{
@@ -132,7 +134,7 @@ function HoloShimmer() {
 }
 
 export function InvitationPoster() {
-  const guestName = useMemo(() => {
+  const guestName = React.useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     const name = params.get('guest');
     return name ? decodeURIComponent(name) : 'Honored Guest';
@@ -269,7 +271,8 @@ export function InvitationPoster() {
             className="text-center mt-3">
             <p className="text-white/60 text-[10px] tracking-widest">DEAR</p>
             
-            {/* ⭐ ලයින් බ්‍රේක් වෙනස්කම: 'whitespace-pre-line' පන්තිය මෙතනට ඇතුළත් කලා */}
+            {/* ⭐ මෙන්න මෙතනට මම "whitespace-pre-line" සහ "leading-relaxed" පන්ති (Classes) එකතු කලා */}
+            {/* මේකෙන් තමයි Invitation එක ඇතුලේ නම ඔයා කඩපු විදිහටම පේළි කැඩිලා ලස්සනට පෙන්වන්නේ! */}
             <motion.p
               className="font-display text-white text-base sm:text-lg font-semibold tracking-wide mt-1.5 whitespace-pre-line leading-relaxed text-center break-words"
               animate={{ textShadow: ['0 0 8px rgba(0,212,255,0.3)', '0 0 16px rgba(0,212,255,0.6)', '0 0 8px rgba(0,212,255,0.3)'] }}
