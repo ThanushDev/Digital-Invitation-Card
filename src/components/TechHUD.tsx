@@ -141,7 +141,7 @@ export function TechHUD() {
           }}
           className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full" />
         
-        <span>AI.SYS ONLINE</span>
+        <span>DIGITAL INVITATION</span>
       </motion.div>
 
       {/* Status — bottom left */}
@@ -158,7 +158,7 @@ export function TechHUD() {
           delay: 2.8
         }}>
         
-        NEURAL.NET v4.1
+        DIGI SOLUTIONS
         <motion.span
           animate={{
             opacity: [1, 0, 1]
