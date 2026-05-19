@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import { CircuitBackground } from './CircuitBackground';
 import { AnimatedGlobe } from './AnimatedGlobe';
 import { CharacterLeft } from './CharacterLeft';
 import { CharacterRight } from './CharacterRight';
 import { TechHUD } from './TechHUD';
-import { Calendar, Clock, MapPin } from 'lucide-react';
 
 const T = {
   url: 0.1, label: 0.35, title1: 0.6, title2: 0.85,
@@ -21,7 +21,6 @@ function Gear({ size, clockwise, speed, id }: { size: number; clockwise: boolean
   const outerR = size / 2;
   const innerR = outerR * 0.72;
   const holeR = outerR * 0.22;
-  const toothW = (2 * Math.PI) / (teeth * 2);
   let d = '';
   for (let i = 0; i < teeth * 2; i++) {
     const angle = (i * Math.PI) / teeth;
@@ -61,7 +60,6 @@ function GlitchTitle({ text }: { text: string }) {
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
         {text}
       </motion.span>
-      {/* Cyan shard - top */}
       <motion.span
         aria-hidden
         style={{
@@ -78,7 +76,6 @@ function GlitchTitle({ text }: { text: string }) {
         transition={{ duration: 3.5, repeat: Infinity, times: [0,0.88,0.89,0.90,0.91,0.93,0.94,0.95,0.96,0.97,0.98,1] }}>
         {text}
       </motion.span>
-      {/* Red shard - bottom */}
       <motion.span
         aria-hidden
         style={{
@@ -135,7 +132,7 @@ function HoloShimmer() {
 }
 
 export function InvitationPoster() {
-  const guestName = React.useMemo(() => {
+  const guestName = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     const name = params.get('guest');
     return name ? decodeURIComponent(name) : 'Honored Guest';
@@ -271,8 +268,10 @@ export function InvitationPoster() {
             transition={{ duration: 0.6, delay: T.guest, ease }}
             className="text-center mt-3">
             <p className="text-white/60 text-[10px] tracking-widest">DEAR</p>
+            
+            {/* ⭐ ලයින් බ්‍රේක් වෙනස්කම: 'whitespace-pre-line' පන්තිය මෙතනට ඇතුළත් කලා */}
             <motion.p
-              className="font-display text-white text-lg sm:text-xl font-semibold tracking-wide mt-0.5"
+              className="font-display text-white text-base sm:text-lg font-semibold tracking-wide mt-1.5 whitespace-pre-line leading-relaxed text-center break-words"
               animate={{ textShadow: ['0 0 8px rgba(0,212,255,0.3)', '0 0 16px rgba(0,212,255,0.6)', '0 0 8px rgba(0,212,255,0.3)'] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
               {guestName}
