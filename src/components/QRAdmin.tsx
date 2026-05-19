@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 declare const QRCode: any;
 
 interface GuestCard {
   name: string;
   url: string;
-  canvasRef: HTMLCanvasElement | null;
 }
 
 export function QRAdmin() {
@@ -16,18 +15,6 @@ export function QRAdmin() {
   const [cards, setCards] = useState<GuestCard[]>([]);
   const [generated, setGenerated] = useState(false);
   const [qrLibReady, setQrLibReady] = useState(false);
-
-  // URL එකෙන් 'guest' parameter එක අරන් Invitation එක පෙන්වන කොටස (Screen shot එකේ වැඩේ මෙන්න මෙතනින් වෙන්නේ)
-  const [currentGuestName, setCurrentGuestName] = useState('');
-
-  useEffect(() => {
-    // URL එකේ ?guest= කියන කොටස කියවා ගැනීම
-    const params = new URLSearchParams(window.location.search);
-    const guestParam = params.get('guest');
-    if (guestParam) {
-      setCurrentGuestName(decodeURIComponent(guestParam));
-    }
-  }, []);
 
   // Load QRCode.js dynamically
   useEffect(() => {
@@ -54,7 +41,6 @@ export function QRAdmin() {
     const newCards: GuestCard[] = names.map(name => ({
       name,
       url: baseUrl.replace(/\/$/, '') + '/?guest=' + encodeURIComponent(name),
-      canvasRef: null,
     }));
     setCards(newCards);
     setGenerated(true);
@@ -65,7 +51,8 @@ export function QRAdmin() {
     if (!generated || !cards.length || !qrLibReady) return;
     cards.forEach((card, idx) => {
       const el = document.getElementById(`qr-canvas-${idx}`);
-      if (!el || el.childNodes.length > 0) return;
+      if (!el) return;
+      el.innerHTML = ''; // පැරණි QR Code මකා දැමීම
       new (window as any).QRCode(el, {
         text: card.url,
         width: 140,
@@ -77,7 +64,7 @@ export function QRAdmin() {
     });
   }, [cards, generated, qrLibReady]);
 
-  // 100% ක් වැඩ කරන QR Code Download ක්‍රමය (Canvas හෝ Img දෙකම support කරයි)
+  // ⭐ QR Code ඩවුන්ලෝඩ් බොත්තම සක්‍රීය කිරීමේ ක්‍රමය (100% Working)
   const downloadOne = (idx: number, name: string) => {
     const el = document.getElementById(`qr-canvas-${idx}`);
     const canvas = el?.querySelector('canvas');
@@ -91,7 +78,7 @@ export function QRAdmin() {
     }
 
     if (!dataUrl) {
-      alert('QR Code එක ඩවුන්ලෝඩ් කරන්න අපහසුයි. නැවත උත්සාහ කරන්න.');
+      alert('QR Code එක බාගත කර ගැනීමට නොහැක. නැවත උත්සාහ කරන්න.');
       return;
     }
 
@@ -127,7 +114,7 @@ export function QRAdmin() {
       </style>
     </head><body>
       <div style="text-align:center;margin-bottom:12px;font-family:sans-serif;font-size:13px;color:#666">
-        Innovation &amp; Technology Expo — Guest QR Codes (${cards.length})
+        Guest QR Codes (${cards.length})
       </div>
       <div style="text-align:center">${items}</div>
       <script>window.onload=()=>window.print()<\/script>
@@ -147,63 +134,26 @@ export function QRAdmin() {
       minHeight: '100vh',
       background: '#0a1845',
       color: '#fff',
-      fontFamily: 'Inter, sans-serif',
-      padding: '28px 20px',
+      fontFamily: 'sans-serif',
+      padding: '24px 16px',
     }}>
-      
-      {/* --- INVITATION PREVIEW SECTION (ඔයාගේ Screen Shot එකේ තියෙන UI එක වැඩ කරන විදිහ) --- */}
-      {currentGuestName && (
-        <div style={{
-          maxWidth: 400,
-          margin: '0 auto 40px auto',
-          background: 'linear-gradient(180deg, #071133 0%, #0a1845 100%)',
-          border: '2px solid #00d4ff',
-          borderRadius: 16,
-          padding: '30px 20px',
-          textAlign: 'center',
-          boxShadow: '0 0 20px rgba(0,212,255,0.2)'
-        }}>
-          <div style={{ fontSize: 10, letterSpacing: '0.3em', color: '#00d4ff', marginBottom: 15 }}>DIGITAL INVITATION</div>
-          <h2 style={{ fontSize: 18, color: '#fff', margin: '0 0 20px 0', fontWeight: 700 }}>INNOVATION & TECHNOLOGY</h2>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 5 }}>DEAR</div>
-          
-          {/* ⭐ CRITICAL FIX: 'whiteSpace: pre-line' මඟින් ඔයා එන්ටර් කරපු තැනින්ම නම පේළි කැඩී පෙන්වයි */}
-          <div style={{
-            fontSize: 20,
-            fontWeight: 700,
-            color: '#fff',
-            whiteSpace: 'pre-line', // මෙමඟින් line breaks ආරක්ෂා කරයි!
-            lineHeight: '1.5',
-            margin: '15px 0',
-            wordBreak: 'break-word'
-          }}>
-            {currentGuestName}
-          </div>
-          
-          <div style={{ fontSize: 11, color: '#00d4ff', marginTop: 20 }}>25 MAY 2026 · 10:30 AM</div>
-        </div>
-      )}
-
-      {/* --- ADMIN PANEL SECTION (Mobile Responsive) --- */}
       <div style={{ maxWidth: 760, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{ fontSize: 11, letterSpacing: '0.3em', color: '#00d4ff', marginBottom: 6 }}>ADMIN PANEL</div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: 0 }}>Guest QR Code Generator</h1>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <h1 style={{ fontSize: 22, color: '#fff', margin: 0 }}>Guest QR Code Generator</h1>
         </div>
 
         <div style={{
           background: '#0d1b4c',
           border: '1px solid #3b5fc9',
-          borderRadius: 14,
-          padding: '20px 22px',
+          borderRadius: 12,
+          padding: '20px',
           marginBottom: 20,
         }}>
-          {/* Mobile responsive flex-wrap wrapper */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
             {/* URL input */}
-            <div style={{ flex: '1 1 300px' }}>
-              <label style={{ display: 'block', fontSize: 11, color: '#00d4ff', marginBottom: 8, textTransform: 'uppercase' }}>
-                Invitation Base URL
+            <div style={{ flex: '1 1 280px' }}>
+              <label style={{ display: 'block', fontSize: 11, color: '#00d4ff', marginBottom: 6 }}>
+                INVITATION BASE URL
               </label>
               <input
                 type="text"
@@ -213,53 +163,51 @@ export function QRAdmin() {
                   width: '100%',
                   background: '#0a1845',
                   border: '1px solid #3b5fc9',
-                  borderRadius: 8,
+                  borderRadius: 6,
                   color: '#fff',
                   padding: '9px 12px',
                   fontSize: 12,
                   boxSizing: 'border-box',
-                  outline: 'none',
                 }}
               />
             </div>
 
-            {/* Textarea Input */}
-            <div style={{ flex: '1 1 300px' }}>
-              <label style={{ display: 'block', fontSize: 11, color: '#00d4ff', marginBottom: 8, textTransform: 'uppercase' }}>
-                Guest Names (Double Enter to separate guests)
+            {/* Names text area */}
+            <div style={{ flex: '1 1 280px' }}>
+              <label style={{ display: 'block', fontSize: 11, color: '#00d4ff', marginBottom: 6 }}>
+                GUEST NAMES (DOUBLE ENTER TO SEPARATE)
               </label>
               <textarea
                 value={guestText}
                 onChange={e => setGuestText(e.target.value)}
-                placeholder={"Senior Lecturer,\nMrs. D. Ravichandran\n\nKamal Perera\nand Family"}
+                placeholder={"Senior Lecturer,\nMrs. D. Ravichandran\n\nKamal Perera"}
                 style={{
                   width: '100%',
-                  height: 120,
+                  height: 110,
                   background: '#0a1845',
                   border: '1px solid #3b5fc9',
-                  borderRadius: 8,
+                  borderRadius: 6,
                   color: '#fff',
                   padding: '9px 12px',
                   boxSizing: 'border-box',
                   fontSize: 13,
                   resize: 'vertical',
-                  outline: 'none',
                 }}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 16 }}>
+          <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
             <button
               onClick={generate}
               style={{
                 background: 'linear-gradient(135deg, #3b5fc9, #00d4ff)',
                 color: '#fff',
                 border: 'none',
-                borderRadius: 8,
-                padding: '10px 24px',
-                fontSize: 14,
-                fontWeight: 600,
+                borderRadius: 6,
+                padding: '10px 20px',
+                fontSize: 13,
+                fontWeight: 'bold',
                 cursor: 'pointer',
               }}
             >
@@ -272,9 +220,9 @@ export function QRAdmin() {
                   background: '#0a1845',
                   color: '#fff',
                   border: '1px solid #3b5fc9',
-                  borderRadius: 8,
-                  padding: '10px 20px',
-                  fontSize: 14,
+                  borderRadius: 6,
+                  padding: '10px 16px',
+                  fontSize: 13,
                   cursor: 'pointer',
                 }}
               >
@@ -284,25 +232,24 @@ export function QRAdmin() {
           </div>
         </div>
 
-        {/* QR Grid display */}
+        {/* QR Display Grid */}
         {generated && cards.length > 0 && (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))',
-            gap: 14,
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+            gap: 12,
           }}>
             {cards.map((card, idx) => (
               <div
                 key={idx}
                 style={{
                   background: '#fff',
-                  borderRadius: 12,
-                  padding: '14px 12px 10px',
+                  borderRadius: 10,
+                  padding: 12,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: 8,
                   boxSizing: 'border-box'
                 }}
               >
@@ -310,26 +257,25 @@ export function QRAdmin() {
 
                 <div style={{
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 'bold',
                   color: '#0a1845',
                   textAlign: 'center',
-                  wordBreak: 'break-word',
-                  lineHeight: 1.35,
                   whiteSpace: 'pre-line',
-                  margin: '4px 0'
+                  margin: '6px 0',
+                  wordBreak: 'break-word'
                 }}>
                   {card.name}
                 </div>
 
-                <div style={{ display: 'flex', gap: 6, width: '100%', marginTop: 'auto' }}>
+                <div style={{ display: 'flex', gap: 4, width: '100%' }}>
                   <button
                     onClick={() => downloadOne(idx, card.name)}
                     style={{
                       flex: 1,
                       fontSize: 11,
-                      padding: '6px 4px',
+                      padding: '6px 2px',
                       border: '1px solid #ddd',
-                      borderRadius: 6,
+                      borderRadius: 4,
                       background: '#f5f5f5',
                       color: '#0a1845',
                       cursor: 'pointer',
@@ -342,9 +288,9 @@ export function QRAdmin() {
                     style={{
                       flex: 1,
                       fontSize: 11,
-                      padding: '6px 4px',
+                      padding: '6px 2px',
                       border: '1px solid #ddd',
-                      borderRadius: 6,
+                      borderRadius: 4,
                       background: '#f5f5f5',
                       color: '#0a1845',
                       cursor: 'pointer',
