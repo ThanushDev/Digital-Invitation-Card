@@ -262,7 +262,7 @@ export function InvitationPoster() {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 0.8, y: 0 }}
             transition={{ duration: 0.5, delay: T.subtitle, ease }}
             className="text-white/80 italic text-xs sm:text-sm text-center mt-2">
-            The Skill Exhibition · Class of 2026
+            The Skill Exhibition · 2026
           </motion.p>
 
           {/* Guest name */}
@@ -314,9 +314,9 @@ export function InvitationPoster() {
             transition={{ duration: 0.6, delay: T.details, ease }}
             className="grid grid-cols-3 gap-2 mt-3 px-2">
             {[
-              { Icon: Calendar, label: 'DATE', value: '14 JUN 2026' },
-              { Icon: Clock, label: 'TIME', value: '9:00 AM' },
-              { Icon: MapPin, label: 'VENUE', value: 'Tech Hall A' },
+              { Icon: Calendar, label: 'DATE', value: '25 MAY 2026' },
+              { Icon: Clock, label: 'TIME', value: '10:30 AM' },
+              { Icon: MapPin, label: 'VENUE', value: 'MAIN CANTEEN (CAFETERIA)' },
             ].map((item, i) => (
               <motion.div key={item.label}
                 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
@@ -334,8 +334,8 @@ export function InvitationPoster() {
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: T.organizer, ease }}
             className="text-center mt-3">
-            <p className="text-cyan-300/70 text-[9px] tracking-[0.3em] font-semibold">HOSTED BY</p>
-            <p className="text-white/90 text-xs sm:text-sm font-semibold mt-0.5 tracking-wide">Tech Innovators Society</p>
+            <p className="text-cyan-300/70 text-[9px] tracking-[0.3em] font-semibold">ORGANIZED BY</p>
+            <p className="text-white/90 text-xs sm:text-sm font-semibold mt-0.5 tracking-wide">22/23 DBMS BATCH</p>
           </motion.div>
 
           {/* Footer */}
@@ -343,7 +343,7 @@ export function InvitationPoster() {
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: T.footer, ease }}
             className="text-center mt-2 pt-2 border-t border-cyan-400/15">
-            <p className="text-white/50 text-[9px] tracking-wider">RSVP · +0282 12345-678</p>
+            <p className="text-white/50 text-[9px] tracking-wider">DESIGN BY: MR.THANUSH</p>
           </motion.div>
         </div>
 
